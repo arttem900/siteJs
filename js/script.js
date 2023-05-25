@@ -77,6 +77,8 @@ let infoHeader = document.querySelector('.info-header'),
 
 tabVisible(infoHeader, tabHeader, tabContent)
 //         // End ТАБЫ
+
+console.log();
 })
 
 
