@@ -78,7 +78,85 @@ let infoHeader = document.querySelector('.info-header'),
 tabVisible(infoHeader, tabHeader, tabContent)
 //         // End ТАБЫ
 
-console.log();
+
+
+//TIMER
+let timerNumbers = document.querySelector('.timer-numbers'),
+    hours = timerNumbers.querySelector('.hours'),
+    minutes = timerNumbers.querySelector('.minutes'),
+    seconds = timerNumbers.querySelector('.seconds')
+    
+    
+let dedline = '2023-05-29'
+let open = getTimeRemaining(dedline)
+console.log(open);
+hours.textContent = open.hours
+open.hours <= 9 ? hours.textContent = '0' + open.hours:open.hours
+minutes.textContent = open.minutes
+open.minutes <= 9 ? minutes.textContent = '0' + open.minutes:open.minutes
+seconds.textContent = open.seconde
+open.seconde <= 9 ? seconds.textContent = '0' + open.seconde:open.seconde
+
+function getTimeRemaining(endtime){
+    
+    let t = Date.parse(endtime) - Date.parse(new Date()),
+        seconds = Math.floor((t / 1000) % 60),
+        minutes = Math.floor((t / 1000 / 60) % 60),
+        hours = Math.floor(t / 1000 / 60 / 60)
+        return {
+            'total': t,
+            'hours': hours,
+            'minutes': minutes,
+            'seconde': seconds
+        }
+}
+
+function setClock(id, endtimes){
+let time = document.getElementById(id),
+    hours = time.querySelector('.hours'),
+    minutes = time.querySelector('.minutes'),
+    seconds = time.querySelector('.seconds'),
+    timeInterval = setInterval(updateClock, 1000)
+
+    function updateClock(){
+        let t = getTimeRemaining(endtimes)
+        hours.textContent = t.hours
+        t.hours <= 9 ? hours.textContent = '0' + t.hours:t.hours
+        minutes.textContent = t.minutes
+        t.minutes <= 9 ? minutes.textContent = '0' + t.minutes:t.minutes
+        seconds.textContent = t.seconde
+        t.seconde <= 9 ? seconds.textContent = '0' + t.seconde:t.seconde
+        if(t.total == 0){
+            clearInterval(timeInterval)
+        }
+    }
+}
+setClock('timer', dedline)
+//end TIMER
+
+//MODAL
+
+let more = document.querySelector('.more'),
+    overlay = document.querySelector('.overlay'),
+    close = document.querySelector('.popup-close')
+
+    more.addEventListener('click', () => {
+        overlay.style.display = 'block'
+        more.classList.add('more-splash')
+        document.body.style.overflow = 'hidden'
+    })
+    close.addEventListener('click', () => {
+        overlay.style.display = 'none'
+        more.classList.remove('more-splash')
+        document.body.style.overflow = ''
+        
+    })
+    overlay.addEventListener('click', () => {
+        overlay.style.display = 'none'
+        more.classList.remove('more-splash')
+        document.body.style.overflow = ''
+    })
+
 })
 
 
