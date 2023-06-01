@@ -87,7 +87,7 @@ let timerNumbers = document.querySelector('.timer-numbers'),
     seconds = timerNumbers.querySelector('.seconds')
     
     
-let dedline = '2023-05-29'
+let dedline = '2023-06-02'
 let open = getTimeRemaining(dedline)
 console.log(open);
 hours.textContent = open.hours
@@ -151,33 +151,69 @@ let more = document.querySelector('.more'),
         document.body.style.overflow = ''
         
     })
-    overlay.addEventListener('click', () => {
-        overlay.style.display = 'none'
-        more.classList.remove('more-splash')
-        document.body.style.overflow = ''
-    })
+    // overlay.addEventListener('click', () => {
+    //     overlay.style.display = 'none'
+    //     more.classList.remove('more-splash')
+    //     document.body.style.overflow = ''
+    // })
 
 
 
-    // class Options{
-    //     constructor( height, width, bg, color, fontSize, textAlign){
-    //         this.height = height
-    //         this.width = width
-    //         this.bg = bg
-    //         this.fontSize = fontSize
-    //         this.textAlign = textAlign
-    //         this.color = color
-    //     }
-    //     createElem(){
-    //         let promptAdd = prompt('Введите текст', ' '),
-    //             elementStyle = document.createElement('div')
-    //             elementStyle.innerHTML = promptAdd
-    //             elementStyle.style.cssText = `height:${this.height}; width:${this.width}; color:${this.color}; background:${this.bg}; font-size:${this.fontSize}; text-align:${this.textAlign}`
-    //             document.body.appendChild(elementStyle)
-    //     }
-    // }
-    //     let elemCreateStyle = new Options('100px', '400px', '#313131', 'green', '28px', 'center')
-    //         elemCreateStyle.createElem()
+    //FORM
+
+    let massage = {
+        loading: 'Загрузка...',
+        success: 'Спасибо, скоро мы вам перезвоним!',
+        failure: 'Что-то пошло не так'
+    }
+
+    let form = document.querySelector('.main-form'),
+        input = form.getElementsByTagName('input'),
+        statusMassage = document.createElement('div')
+
+        statusMassage.classList.add('status')
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault()
+            form.appendChild(statusMassage)
+
+            //создать запрос
+            let request = new XMLHttpRequest
+                request.open('POST', 'http://localhost:80')
+               
+                //заголовок Http запроса
+                request.setRequestHeader('Content-type', 'application/json; charset=utf-8')//для JSON формата
+                // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+                //собираем данные которые ввел пользователь
+                let formData = new FormData(form)
+
+                let obj = {} // отправка в JSON формате
+                formData.forEach(function(key, value){ // отправка в JSON формате
+                    obj[key] = value // отправка в JSON формате
+                })
+                let jeson = JSON.stringify(obj) // отправка в JSON формате
+                    //отправить на сервер
+                    request.send(jeson)
+                    // request.send(formData)
+            //отслеживаем отправку запроса
+                request.addEventListener('readystatechange', () => {
+                    if(request.readyState < 4){
+                        statusMassage.innerHTML = massage.loading
+                    }else if(request.readyState == 4 && request.status == 200){
+                        statusMassage.innerHTML = massage.success
+                    }else{
+                        statusMassage.innerHTML = massage.failure
+                    }
+                })
+                //очистить все инпуты
+                for(let i = 0; i < input.length; i++){
+                    input[i].value = ''
+                }
+                overlay.style.display = 'none'
+                more.classList.remove('more-splash')
+                document.body.style.overflow = ''
+               
+        })
 })
 
 
